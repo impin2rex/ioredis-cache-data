@@ -1,0 +1,27 @@
+{
+  "name": "ioredis-cache",
+  "version": "1.0.0",
+  "description": "This is a REST API to test Redis cache. Here you can insert data to Redis and fetch data form Redis, The postman collection link is https://www.getpostman.com/collections/cd0cf47f6ecc8cd65c9d.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index",
+    "watch": "nodemon index"
+  },
+  "keywords": [
+    "ioredis",
+    "ioredis node js",
+    "Redis"
+  ],
+  "author": "impin2rex",
+  "license": "ISC",
+  "dependencies": {
+    "express": "^4.17.1",
+    "ioredis": "^4.19.4"
+  },
+  "devDependencies": {
+    "eslint": "^7.18.0",
+    "eslint-config-airbnb-base": "^14.2.1",
+    "eslint-plugin-import": "^2.22.1",
+    "nodemon": "^2.0.7"
+  }
+}
