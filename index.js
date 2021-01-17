@@ -1,29 +1,29 @@
 const express = require('express');
-const redis = require('./config');
+const Redis = require('ioredis');
+const { getRedis, key } = require('./config');
 
-const key = 'user_data'; // Redis key set
+const { redisPort, redisHost, redisDb } = getRedis;
+
+const redis = new Redis({
+  port: redisPort, // Redis port
+  host: redisHost, // Redis host
+  db: redisDb,
+});
 
 const PORT = process.env.PORT || 5000;
 
 const app = express();
 app.use(express.json());
 // const key = 'veggies';
-app.get('/getdata', async (req, res, next) => {
+app.get('/getdata', async (req, res) => {
   try {
     const veggies = await redis.lrange(key, 0, -1);
     const arr = veggies.map((x) => JSON.parse(x));
-    if (arr.length > 0) {
-      console.log(arr);
-      res.status(200).json({
-        success: true,
-        data: arr,
-      });
-    } else {
-      res.status(404).json({
-        success: false,
-        message: 'No data inserted yet!',
-      });
-    }
+    console.log(arr);
+    res.status(200).json({
+      success: true,
+      data: arr,
+    });
   } catch (error) {
     console.error(error);
     res.status(400).json({
@@ -32,7 +32,6 @@ app.get('/getdata', async (req, res, next) => {
     });
   }
   // redis.disconnect();
-  next();
 });
 
 app.get('/getdata/:id', async (req, res) => {
@@ -62,12 +61,12 @@ app.get('/getdata/:id', async (req, res) => {
   }
 });
 
-app.post('/postdata', async (req, res, next) => {
+app.post('/postdata', async (req, res) => {
   try {
     const { id = new Date().valueOf(), name, age } = req.body;
     console.log(id);
-    const data = [JSON.stringify({ id, name, age })];
-    const result = await redis.lpush(key, ...data);
+    const data = JSON.stringify({ id, name, age });
+    const result = await redis.lpush(key, data);
     console.log(result);
     if (result >= 10) {
       await redis.ltrim(key, 0, 9);
@@ -84,7 +83,6 @@ app.post('/postdata', async (req, res, next) => {
     });
   }
   // redis.disconnect();
-  next();
 });
 
 app.listen(PORT, () => {
