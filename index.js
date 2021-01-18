@@ -1,14 +1,7 @@
 const express = require('express');
-const Redis = require('ioredis');
-const { getRedis, key } = require('./config');
+const { key, getRedis } = require('./config');
 
-const { redisPort, redisHost, redisDb } = getRedis;
-
-const redis = new Redis({
-  port: redisPort, // Redis port
-  host: redisHost, // Redis host
-  db: redisDb,
-});
+const { redis } = getRedis;
 
 const PORT = process.env.PORT || 5000;
 
